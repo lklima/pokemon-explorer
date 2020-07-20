@@ -10,7 +10,7 @@ export default createGlobalStyle`
   }
 
   body {
-    background: #f0f0f5 url(${Background}) no-repeat center top fixed;
+    background: #f0f0f5 url(${Background}) no-repeat center top;
     -webkit-font-smoothing: antialiased;
   }
 

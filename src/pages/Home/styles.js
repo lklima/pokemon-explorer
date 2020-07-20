@@ -1,58 +1,57 @@
 import styled, { css } from 'styled-components';
 import { shade } from 'polished';
 
-export const Title = styled.h1`
-  font-size: 45px;
-  color: #3a3a3a;
-  max-width: 450px;
-  line-height: 56px;
+export const Header = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
-export const Form = styled.form`
+export const Title = styled.h1`
+  font-size: 50px;
+  color: #3a3a3a;
+  max-width: 450px;
+`;
+
+export const Logo = styled.img`
+  width: 160px;
+`;
+
+export const Search = styled.div`
   margin-top: 40px;
-  max-width: 700px;
+  max-width: 800px;
   display: flex;
 
   input {
     flex: 1;
-    height: 70px;
+    height: 60px;
     border: 0;
     padding: 0 24px;
     border-radius: 5px 0 0 5px;
     color: #3a3a3a;
     border: 2px solid white;
     border-right: 0;
-
-    ${(props) =>
-      props.hasError &&
-      css`
-        border-color: #c53830;
-      `}
+    font-size: 22px;
 
     &::placeholder {
       color: #a8a8b3;
+      font-size: 22px;
     }
   }
 
   button {
-    height: 70px;
-    width: 250px;
-    background: #04d361;
+    height: 64px;
+    width: 150px;
+    background: #dd2c00;
     border-radius: 0 5px 5px 0;
     border: 0;
     color: white;
+    font-size: 22px;
     transition: background-color 0.2s;
 
     &:hover {
-      background: ${shade(0.2, '#04d361')};
+      background: ${shade(0.2, '#dd2c00')};
     }
   }
-`;
-
-export const Error = styled.span`
-  display: block;
-  color: #c53830;
-  margin-top: 8px;
 `;
 
 export const ItemsContainer = styled.div`

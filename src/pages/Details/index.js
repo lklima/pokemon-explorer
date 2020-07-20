@@ -1,86 +1,184 @@
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch, Link } from 'react-router-dom';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiArrowLeft } from 'react-icons/fi';
+import { useQuery } from '@apollo/client';
+import ReactLoading from 'react-loading';
 
-import { Header, RepositoryInfo, Issues } from './styles';
-import logo from '../../assets/logo.svg';
-import api from '../../services/api';
+import {
+  Header,
+  Container,
+  Info,
+  Row,
+  Field,
+  Value,
+  Name,
+  Number,
+  Category,
+  BoxContainer,
+  TextBox,
+  LoadView,
+  EditButton,
+} from './styles';
+import { GET_POKEMON } from '../../graphql/queries';
+import EditModal from '../../components/EditModal';
 
 const Details = () => {
-  const { params } = useRouteMatch();
-  const [repository, setRepository] = useState(null);
-  const [issues, setIssues] = useState([]);
+  const {
+    params: { id },
+  } = useRouteMatch();
+  const { data } = useQuery(GET_POKEMON, { variables: { id } });
+  const [pokemon, setPokemon] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [maxHP, setMaxHP] = useState('');
+  const [weight, setWeight] = useState('');
+  const [height, setHeight] = useState('');
 
-  useEffect(() => {
-    api.get(`repos/${params.repository}`).then((res) => {
-      setRepository(res.data);
-    });
+  useEffect(() => getData(), [data]);
 
-    api.get(`repos/${params.repository}/issues`).then((res) => {
-      setIssues(res.data);
-    });
+  function getData() {
+    setPokemon(null);
+    const savedRes = JSON.parse(localStorage.getItem('pokemons'));
 
-    /* async function loadData(): Promise<void> {
-      const [respository, issues] = await Promise.all([
-        api.get(`repos/${params.repository}`),
-        api.get(`repos/${params.repository}/issues`),
-      ]);
+    if (data) {
+      savedRes.map((i) => {
+        if (i.id === id) {
+          setMaxHP(i.maxHP);
+          setWeight(i.weight.minimum);
+          setHeight(i.height.minimum);
+        }
+      });
+
+      setPokemon(data.pokemon);
     }
+  }
 
-    loadData(); */
-  }, [params.repository]);
+  function handleEdit(data) {
+    const savedRes = JSON.parse(localStorage.getItem('pokemons'));
+    let index = 0;
+
+    savedRes.map((i) => {
+      index += 1;
+      if (id === i.id) {
+        savedRes[index - 1].maxHP = data.maxHP;
+        savedRes[index - 1].height.minimum = data.height;
+        savedRes[index - 1].weight.minimum = data.weight;
+      }
+    });
+
+    localStorage.setItem(
+      'pokemons',
+      JSON.stringify(savedRes.map((i) => ({ ...i }))),
+    );
+
+    getData();
+  }
 
   return (
-    <>
+    <div id="main">
       <Header>
-        <img src={logo} alt="logo" />
         <Link to="/">
-          <FiChevronLeft size={16} />
-          Voltar
+          <FiArrowLeft size={35} />
+          Back
         </Link>
       </Header>
 
-      {repository && (
-        <RepositoryInfo>
+      <Container>
+        {pokemon ? (
           <header>
-            <img src={repository.owner.avatar_url} alt="profile" />
-
             <div>
-              <strong>{repository.full_name}</strong>
-              <p>{repository.description}</p>
+              <img src={pokemon.image} alt="pokemon" />
+
+              <EditButton
+                data-testid="edit-button"
+                onClick={() => setOpenModal(!openModal)}
+              >
+                Edit
+              </EditButton>
             </div>
+
+            <Info>
+              <Row>
+                <Name>{pokemon.name}</Name>
+                <Number>#{pokemon.number}</Number>
+              </Row>
+
+              <Row>
+                <Field>Category</Field>
+                <Value>{pokemon.classification}</Value>
+              </Row>
+              <Row>
+                <Field>Heigth</Field>
+                <Value>{height}</Value>
+              </Row>
+
+              <Row>
+                <Field>Weigth</Field>
+                <Value>{weight}</Value>
+              </Row>
+
+              <Row>
+                <Field>Max. HP</Field>
+                <Value>{maxHP}</Value>
+              </Row>
+
+              <Category>Type</Category>
+
+              <BoxContainer>
+                {pokemon.types.map((i) => (
+                  <TextBox type={i} key={i}>
+                    {i}
+                  </TextBox>
+                ))}
+              </BoxContainer>
+
+              <Category>Weaknesses</Category>
+
+              <BoxContainer>
+                {pokemon.weaknesses.map((i) => (
+                  <TextBox type={i} key={i}>
+                    {i}
+                  </TextBox>
+                ))}
+              </BoxContainer>
+
+              {pokemon.evolutions && (
+                <>
+                  <Category>Evolutions</Category>
+
+                  <BoxContainer>
+                    {pokemon.evolutions.map((i) => (
+                      <div key={i.name}>
+                        <img src={i.image} alt={i.name} />
+                        <h1>{i.name}</h1>
+                      </div>
+                    ))}
+                  </BoxContainer>
+                </>
+              )}
+            </Info>
           </header>
+        ) : (
+          <LoadView>
+            <ReactLoading
+              type="bubbles"
+              color="#bf360c"
+              height="15%"
+              width="15%"
+            />
+          </LoadView>
+        )}
+      </Container>
 
-          <ul>
-            <li>
-              <strong>{repository.stargazers_count}</strong>
-              <p>Stars</p>
-            </li>
-            <li>
-              <strong>{repository.forks_count}</strong>
-              <p>Forks</p>
-            </li>
-            <li>
-              <strong>{repository.open_issues_count}</strong>
-              <p>Issues Abertas</p>
-            </li>
-          </ul>
-        </RepositoryInfo>
+      {pokemon && (
+        <EditModal
+          modalIsOpen={openModal}
+          pokemon={pokemon}
+          currentData={{ maxHP, height, weight }}
+          closeModal={() => setOpenModal(false)}
+          edit={handleEdit}
+        />
       )}
-
-      <Issues>
-        {issues.map((issue) => (
-          <a key={issue.id} href={issue.html_url}>
-            <div>
-              <strong>{issue.title}</strong>
-              <p>{issue.user.login}</p>
-            </div>
-
-            <FiChevronRight size={20} />
-          </a>
-        ))}
-      </Issues>
-    </>
+    </div>
   );
 };
 

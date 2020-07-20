@@ -1,93 +1,85 @@
 import React, { useState, useEffect } from 'react';
-import { FiChevronRight } from 'react-icons/fi';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import ReactLoading from 'react-loading';
 
-import api from '../../services/api';
+import logo from '../../assets/logo.png';
+import { GET_ALL_POKEMONS } from '../../graphql/queries';
 import Pokemon from '../../components/Pokemon';
+import { Title, Search, ItemsContainer, Logo, Header } from './styles';
 
-import { Title, Form, ItemsContainer, Error } from './styles';
-
-const GET_POKEMONS = gql`
-  query getPokemons {
-    pokemons(first: 151) {
-      id
-      number
-      name
-      image
-      attacks {
-        special {
-          name
-          type
-          damage
-        }
-      }
-    }
-  }
-`;
+let interval;
 
 const Home = () => {
-  const { loading, data } = useQuery(GET_POKEMONS);
+  const { loading, data } = useQuery(GET_ALL_POKEMONS);
   const [pokemons, setPokemons] = useState([]);
-  const [newRepo, setNewRepo] = useState('');
-  const [inputErro, setInputError] = useState('');
-  const [repositories, setReposistories] = useState(() => {
-    const storageRepositories = localStorage.getItem('repositories');
-
-    if (storageRepositories) {
-      return JSON.parse(storageRepositories);
-    }
-
-    return [];
-  });
+  const [search, setSearch] = useState('');
+  const saved = JSON.parse(localStorage.getItem('pokemons'));
 
   useEffect(() => {
-    if (!loading && data) setPokemons(data.pokemons);
+    if (saved) {
+      setPokemons(saved);
+    } else {
+      if (!loading && data) {
+        setPokemons(data.pokemons);
+        localStorage.setItem('pokemons', JSON.stringify(data.pokemons));
+      }
+    }
   }, [loading, data]);
 
   useEffect(() => {
-    localStorage.setItem('repositories', JSON.stringify(repositories));
-  }, [repositories]);
+    clearTimeout(interval);
 
-  async function handleAddReposistories(event) {
-    event.preventDefault();
-    if (!newRepo) {
-      setInputError('Digite o nome do repositório');
-      return;
-    }
+    interval = setTimeout(() => {
+      if (search.trim().length > 2) {
+        const query = pokemons.filter((i) =>
+          i.name.toLowerCase().includes(search),
+        );
 
-    try {
-      const response = await api.get(`repos/${newRepo}`);
-      const repository = response.data;
-      setReposistories([...repositories, repository]);
-      setNewRepo('');
-      setInputError('');
-    } catch (error) {
-      setInputError('Erro ao buscar repositório');
-    }
-  }
+        if (query) {
+          setPokemons(query);
+        }
+      } else {
+        if (saved) {
+          setPokemons(saved);
+        } else {
+          if (data) {
+            setPokemons(data.pokemons);
+          }
+        }
+      }
+    }, 300);
+  }, [search]);
 
   return (
     <>
-      <Title>Pokemons Explorer</Title>
+      <Header>
+        <Logo src={logo} /> <Title>Pokemon Explorer</Title>
+      </Header>
 
-      <Form hasError={!!inputErro} onSubmit={handleAddReposistories}>
+      <Search>
         <input
-          value={newRepo}
-          onChange={(e) => setNewRepo(e.target.value)}
-          placeholder="Digite o nome do repositório"
+          value={search}
+          data-testid="search-field"
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by name..."
         />
-        <button type="submit">Limpar</button>
-      </Form>
 
-      {inputErro && <Error>{inputErro}</Error>}
+        <button data-testid="button" onClick={() => setSearch('')}>
+          Clear
+        </button>
+      </Search>
 
       <ItemsContainer>
         {loading ? (
-          <ReactLoading type="bubbles" color="black" height="15%" width="15%" />
+          <ReactLoading
+            type="bubbles"
+            color="#bf360c"
+            height="15%"
+            width="15%"
+          />
         ) : (
           pokemons.map((pokemon) => (
-            <Pokemon key={pokemon.name} pokemon={pokemon} />
+            <Pokemon key={pokemon.id} pokemon={pokemon} />
           ))
         )}
       </ItemsContainer>

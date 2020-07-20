@@ -1,123 +1,161 @@
 import styled from 'styled-components';
 
 export const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-content: center;
-
   a {
     text-decoration: none;
-    display: flex;
-    align-items: center;
     color: #a8a8b3;
+    font-size: 20px;
+    font-weight: 600;
     transition: color 0.2s;
 
     &:hover {
       color: #666;
     }
-  }
 
-  svg {
-    margin-right: 4px;
+    svg {
+      margin-bottom: -10px;
+    }
   }
 `;
 
-export const RepositoryInfo = styled.section`
-  margin-top: 80px;
+export const Container = styled.section`
+  margin-top: 50px;
+  height: 530px;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
 
   header {
     display: flex;
     align-items: center;
-
     img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-    }
-
-    div {
-      margin-left: 24px;
-
-      strong {
-        font-size: 36px;
-        color: #3d3d4d;
-      }
-
-      p {
-        font-size: 18px;
-        color: #737380;
-        margin-top: 4px;
-      }
-    }
-  }
-
-  ul {
-    display: flex;
-    list-style: none;
-    margin-top: 40px;
-
-    li {
-      & + li {
-        margin-left: 80px;
-      }
-
-      strong {
-        display: flex;
-        font-size: 34px;
-        color: #3d3d4d;
-      }
-
-      span {
-        display: block;
-        margin-top: 4px;
-        color: #6c6c8c;
-      }
+      height: 100%;
     }
   }
 `;
 
-export const Issues = styled.div`
-  margin-top: 80px;
-  max-width: 700px;
+export const Info = styled.div`
+  width: 50%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+`;
 
-  a {
-    background: white;
-    border-radius: 5px;
-    width: 100%;
-    padding: 24px;
-    display: block;
-    text-decoration: none;
+export const Row = styled.div`
+  display: flex;
+  padding: 0 10px;
+  justify-content: space-between;
+  margin: 6px;
+`;
+
+export const Name = styled.p`
+  display: flex;
+  flex: 1;
+  font-size: 30px;
+  font-weight: bold;
+  color: #424242;
+`;
+
+export const Number = styled.div`
+  display: flex;
+  font-size: 26px;
+  font-weight: bold;
+  color: #757575;
+`;
+
+export const Field = styled.p`
+  display: flex;
+  flex: 1;
+  color: #757575;
+  font-weight: 600;
+  font-size: 18px;
+`;
+
+export const Value = styled.p`
+  color: #424242;
+  font-weight: 600;
+  font-size: 18px;
+`;
+
+export const Category = styled.p`
+  font-size: 22px;
+  font-weight: bold;
+  color: #424242;
+  margin: 10px 20px;
+`;
+
+export const BoxContainer = styled.div`
+  display: inline-flexbox;
+  margin-left: 20px;
+  margin-bottom: 6px;
+
+  div {
     display: flex;
-    align-items: center;
-    transition: transform 0.3s;
+    flex-direction: column;
+    padding: 15px;
+    margin: 0 10px;
+    border-radius: 50%;
+    border: solid 3px #bf360c;
+    width: 95px;
+    height: 95px;
 
-    &:hover {
-      transform: translateX(10px);
+    img {
+      height: 80%;
+      border-radius: 20%;
     }
 
-    & + a {
-      margin-top: 16px;
+    h1 {
+      font-size: 16px;
     }
+  }
+`;
 
-    div {
-      margin: 0 16px;
-      flex: 1;
+export const TextBox = styled.p`
+  display: flex;
+  padding: 4px 8px;
+  margin-right: 8px;
+  border-radius: 3px;
+  font-size: 18px;
+  background: ${(props) =>
+    props.type === 'Fire'
+      ? '#ef6c00'
+      : props.type === 'Water' || props.type === 'Ice'
+      ? '#0091ea'
+      : props.type === 'Poison'
+      ? '#d1c4e9'
+      : props.type === 'Bug' || props.type === 'Grass'
+      ? ' #aed581'
+      : props.type === 'Normal'
+      ? '#757575'
+      : props.type === 'Fighting'
+      ? '#bf360c'
+      : props.type === 'Fairy' || props.type === 'Psychic'
+      ? '#ea80fc'
+      : props.type === 'Fighting' || props.type === 'Rock'
+      ? '#9e9d24'
+      : '#ffc400'};
+  color: white;
+`;
 
-      strong {
-        font-size: 20px;
-        color: #3d3d4d;
-      }
+export const LoadView = styled.div`
+  display: flex;
+  height: 90%;
+  align-items: center;
+`;
 
-      p {
-        font-size: 18px;
-        color: #a8a8b3;
-        margin-top: 4px;
-      }
-    }
+export const EditButton = styled.button`
+  margin-top: 15px;
+  padding: 10px 0;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  width: 95%;
+  background: #bf360c;
+  border-radius: 6px;
+  border: 0;
+  transition: 0.2s;
 
-    svg {
-      margin-left: auto;
-      color: #cbcbd5;
-    }
+  &:hover {
+    background: #e64a19;
   }
 `;
