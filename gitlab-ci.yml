@@ -1,0 +1,21 @@
+eslint:
+  image: node:12.12.0
+  stage: code_quality
+  before_script:
+    - npm instaill -g eslint
+  script:
+    - eslint -- --ext .jsx,.js src/
+unit_tests:
+  image: node:12.12.0
+  stage: test
+  before_script:
+    - npm install
+  script:
+    - npm test
+react_build:
+  image: node:12.12.0
+  stage: build
+  before_script:
+    - npm install
+  script:
+    - npm run-script build
