@@ -25,7 +25,7 @@ const Home = () => {
         localStorage.setItem('pokemons', JSON.stringify(data.pokemons));
       }
     }
-  }, [loading, data]);
+  }, [loading, data, savedPokemons]);
 
   useEffect(() => {
     clearTimeout(interval);

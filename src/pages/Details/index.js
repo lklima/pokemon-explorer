@@ -35,9 +35,7 @@ const Details = () => {
   const [height, setHeight] = useState('');
   const savedPokemons = pokemonsVar();
 
-  useEffect(() => getData(), [data]);
-
-  console.log(data);
+  useEffect(() => getData(), [data, getData]);
 
   function getData() {
     setPokemon(null);
