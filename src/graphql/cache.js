@@ -1,17 +1,19 @@
 import { makeVar, InMemoryCache } from '@apollo/client';
 
-export const pokemons = makeVar([]);
-
 export const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        cartItems: {
+        home: {
           read() {
-            return cartItemsVar();
+            return pokemonsVar();
           },
         },
       },
     },
   },
 });
+
+const pokemonsInitialValue = JSON.parse(localStorage.getItem('pokemons'));
+
+export const pokemonsVar = makeVar(pokemonsInitialValue);

@@ -4,6 +4,7 @@ import ReactLoading from 'react-loading';
 
 import logo from '../../assets/logo.png';
 import { GET_ALL_POKEMONS } from '../../graphql/queries';
+import { pokemonsVar } from '../../graphql/cache';
 import Pokemon from '../../components/Pokemon';
 import { Title, Search, ItemsContainer, Logo, Header } from './styles';
 
@@ -13,11 +14,11 @@ const Home = () => {
   const { loading, data } = useQuery(GET_ALL_POKEMONS);
   const [pokemons, setPokemons] = useState([]);
   const [search, setSearch] = useState('');
-  const saved = JSON.parse(localStorage.getItem('pokemons'));
+  const savedPokemons = pokemonsVar();
 
   useEffect(() => {
-    if (saved) {
-      setPokemons(saved);
+    if (savedPokemons) {
+      setPokemons(savedPokemons);
     } else {
       if (!loading && data) {
         setPokemons(data.pokemons);
@@ -39,8 +40,8 @@ const Home = () => {
           setPokemons(query);
         }
       } else {
-        if (saved) {
-          setPokemons(saved);
+        if (savedPokemons) {
+          setPokemons(savedPokemons);
         } else {
           if (data) {
             setPokemons(data.pokemons);

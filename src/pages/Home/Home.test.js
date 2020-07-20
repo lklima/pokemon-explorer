@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import Home from './index';
 
-import { GET_ALL_POKEMONS } from '../../queries';
+import { GET_ALL_POKEMONS } from '../../graphql/queries';
 
 const mocks = [
   {

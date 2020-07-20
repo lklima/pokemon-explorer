@@ -20,6 +20,7 @@ import {
   EditButton,
 } from './styles';
 import { GET_POKEMON } from '../../graphql/queries';
+import { pokemonsVar } from '../../graphql/cache';
 import EditModal from '../../components/EditModal';
 
 const Details = () => {
@@ -32,15 +33,16 @@ const Details = () => {
   const [maxHP, setMaxHP] = useState('');
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
+  const savedPokemons = pokemonsVar();
 
   useEffect(() => getData(), [data]);
 
+  console.log(data);
+
   function getData() {
     setPokemon(null);
-    const savedRes = JSON.parse(localStorage.getItem('pokemons'));
-
     if (data) {
-      savedRes.map((i) => {
+      savedPokemons.map((i) => {
         if (i.id === id) {
           setMaxHP(i.maxHP);
           setWeight(i.weight.minimum);
@@ -53,23 +55,21 @@ const Details = () => {
   }
 
   function handleEdit(data) {
-    const savedRes = JSON.parse(localStorage.getItem('pokemons'));
     let index = 0;
 
-    savedRes.map((i) => {
+    savedPokemons.map((i) => {
       index += 1;
       if (id === i.id) {
-        savedRes[index - 1].maxHP = data.maxHP;
-        savedRes[index - 1].height.minimum = data.height;
-        savedRes[index - 1].weight.minimum = data.weight;
+        savedPokemons[index - 1].maxHP = data.maxHP;
+        savedPokemons[index - 1].height.minimum = data.height;
+        savedPokemons[index - 1].weight.minimum = data.weight;
       }
     });
 
     localStorage.setItem(
       'pokemons',
-      JSON.stringify(savedRes.map((i) => ({ ...i }))),
+      JSON.stringify(savedPokemons.map((i) => ({ ...i }))),
     );
-
     getData();
   }
 
