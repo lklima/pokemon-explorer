@@ -35,11 +35,18 @@ const Details = () => {
   const [height, setHeight] = useState('');
   const savedPokemons = pokemonsVar();
 
-  useEffect(() => getData(), [data, getData]);
+  useEffect(() => {
+    if (data) {
+      setPokemon(data.pokemon);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    getData();
+  }, [savedPokemons]);
 
   function getData() {
-    setPokemon(null);
-    if (data) {
+    if (savedPokemons) {
       savedPokemons.map((i) => {
         if (i.id === id) {
           setMaxHP(i.maxHP);
@@ -47,8 +54,6 @@ const Details = () => {
           setHeight(i.height.minimum);
         }
       });
-
-      setPokemon(data.pokemon);
     }
   }
 

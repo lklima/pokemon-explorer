@@ -23,6 +23,9 @@ const Home = () => {
       if (!loading && data) {
         setPokemons(data.pokemons);
         localStorage.setItem('pokemons', JSON.stringify(data.pokemons));
+        (function () {
+          pokemonsVar(JSON.parse(localStorage.getItem('pokemons')));
+        })();
       }
     }
   }, [loading, data, savedPokemons]);
