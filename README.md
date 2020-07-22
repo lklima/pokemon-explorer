@@ -1,7 +1,9 @@
 ![FotoJet](https://user-images.githubusercontent.com/44346970/87947577-ecbec400-ca79-11ea-9245-6f3a41f9385d.jpg)
 # Pokemon Explorer
 
-Simply obtain and edit Pokémon information  through GraphQL queries with the api: https://github.com/lucasbento/react-relay-pokemon
+#Live Demo: https://pokemonexplorer.netlify.app/
+
+Simply obtain and edit Pokémon information  through GraphQL queries with the api: https://github.com/lucasbento/graphql-pokemon
 
 
 License MIT
