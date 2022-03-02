@@ -3,7 +3,7 @@ import { cache } from '../graphql/cache';
 
 const client = new ApolloClient({
   cache: cache,
-  uri: 'https://graphql-pokemon.now.sh/',
+  uri: 'https://graphqlpokemon.favware.tech/',
   connectToDevTools: true,
 });
 
